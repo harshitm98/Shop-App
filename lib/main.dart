@@ -10,8 +10,10 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      builder: (ctx) => ProductsProvider(),
+    // Using the value makes sure that listener is attached to data and does not mess up in huge ListViews and GridViews
+    return ChangeNotifierProvider.value(
+      value: ProductsProvider(),
+      // builder: (ctx) => ProductsProvider(),
       child: MaterialApp(
         title: 'My Shop',
         theme: ThemeData(
