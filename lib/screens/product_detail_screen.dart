@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/products_provider.dart';
 
 class ProductDetailScreen extends StatelessWidget {
-  static const routeNamed = "/product-detail-screen";
+  static const routeName = "/product-detail-screen";
 
   @override
   Widget build(BuildContext context) {
