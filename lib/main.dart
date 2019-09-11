@@ -4,16 +4,24 @@ import 'package:provider/provider.dart';
 import './screens/product_detail_screen.dart';
 import './screens/products_overview_screen.dart';
 import './providers/products_provider.dart';
+import './providers/cart_provider.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Using the value makes sure that listener is attached to data and does not mess up in huge ListViews and GridViews
-    return ChangeNotifierProvider.value(
-      value: ProductsProvider(),
-      // builder: (ctx) => ProductsProvider(),
+    return MultiProvider(
+      providers: [
+        // Using the value makes sure that listener is attached to data and does not mess up in huge ListViews and GridViews
+        ChangeNotifierProvider.value(
+          // builder: (ctx) => ProductsProvider(),
+          value: ProductsProvider(),
+        ),
+        ChangeNotifierProvider.value(
+          value: Cart(),
+        )
+      ],
       child: MaterialApp(
         title: 'My Shop',
         theme: ThemeData(
