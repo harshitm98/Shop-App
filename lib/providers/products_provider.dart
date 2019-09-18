@@ -38,7 +38,7 @@ class ProductsProvider with ChangeNotifier {
     ),
   ];
 
-  ProductProvider findById(String id){
+  ProductProvider findById(String id) {
     return _items.firstWhere((product) => product.id == id);
   }
 
@@ -66,7 +66,35 @@ class ProductsProvider with ChangeNotifier {
     return [..._items];
   }
 
-  List<ProductProvider> get favoriteItems{
+  List<ProductProvider> get favoriteItems {
     return _items.where((item) => item.isFavorite).toList();
   }
+
+  void addProducts(ProductProvider product) {
+    final newProduct = ProductProvider(
+      id: DateTime.now().toString(),
+      title: product.title,
+      description: product.description,
+      price: product.price,
+      imageUrl: product.imageUrl,
+    );
+    _items.add(newProduct);
+    notifyListeners();
+  }
+
+  void updateProduct(String id, ProductProvider newProduct) {
+    final prodIndex = _items.indexWhere((prod) => prod.id == id);
+    if (prodIndex >= 0) {
+      _items[prodIndex] = newProduct;
+      notifyListeners();
+    }else{
+      print("...");
+    }
+  }
+
+  void deleteProduct(String id){
+    _items.removeWhere((prod) => prod.id == id);
+    notifyListeners();
+  }
+
 }
