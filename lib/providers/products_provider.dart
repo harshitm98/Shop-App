@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import './product_provider.dart';
 
@@ -70,16 +73,35 @@ class ProductsProvider with ChangeNotifier {
     return _items.where((item) => item.isFavorite).toList();
   }
 
-  void addProducts(ProductProvider product) {
-    final newProduct = ProductProvider(
-      id: DateTime.now().toString(),
-      title: product.title,
-      description: product.description,
-      price: product.price,
-      imageUrl: product.imageUrl,
-    );
-    _items.add(newProduct);
-    notifyListeners();
+  Future<void> addProducts(ProductProvider product) {
+    const url = "https://flutter-firebase-226e5.firebaseio.com/products.json";
+    // Returns Future<void> ie http.then(..) is returned
+    return http
+        .post(url,
+            body: json.encode({
+              "title": product.title,
+              "description": product.description,
+              "imageUrl": product.imageUrl,
+              "price": product.price,
+              "isFavorite": product.isFavorite,
+            }))
+        .then((response) {
+          print(json.decode(response.body));
+          print(json.decode(response.statusCode.toString()));
+          final newProduct = ProductProvider(
+            id: json.decode(response.body)["name"],
+            title: product.title,
+            description: product.description,
+            price: product.price,
+            imageUrl: product.imageUrl,
+          );
+          _items.add(newProduct);
+          notifyListeners();
+        }).catchError((error){
+          print(error);
+          throw error;
+        });
+
   }
 
   void updateProduct(String id, ProductProvider newProduct) {
@@ -87,14 +109,13 @@ class ProductsProvider with ChangeNotifier {
     if (prodIndex >= 0) {
       _items[prodIndex] = newProduct;
       notifyListeners();
-    }else{
+    } else {
       print("...");
     }
   }
 
-  void deleteProduct(String id){
+  void deleteProduct(String id) {
     _items.removeWhere((prod) => prod.id == id);
     notifyListeners();
   }
-
 }
