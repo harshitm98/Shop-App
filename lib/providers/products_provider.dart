@@ -73,36 +73,38 @@ class ProductsProvider with ChangeNotifier {
     return _items.where((item) => item.isFavorite).toList();
   }
 
-  Future<void> addProducts(ProductProvider product) {
+  Future<void> addProducts(ProductProvider product) async {
     const url = "https://flutter-firebase-226e5.firebaseio.com/products.json";
     // Returns Future<void> ie http.then(..) is returned
-    return http
-        .post(url,
-            body: json.encode({
-              "title": product.title,
-              "description": product.description,
-              "imageUrl": product.imageUrl,
-              "price": product.price,
-              "isFavorite": product.isFavorite,
-            }))
-        .then((response) {
-          print(json.decode(response.body));
-          print(json.decode(response.statusCode.toString()));
-          final newProduct = ProductProvider(
-            id: json.decode(response.body)["name"],
-            title: product.title,
-            description: product.description,
-            price: product.price,
-            imageUrl: product.imageUrl,
-          );
-          _items.add(newProduct);
-          notifyListeners();
-        }).catchError((error){
-          print(error);
-          throw error;
-        });
-
+    try {
+      final response = await http.post(
+        url,
+        body: json.encode({
+          "title": product.title,
+          "description": product.description,
+          "imageUrl": product.imageUrl,
+          "price": product.price,
+          "isFavorite": product.isFavorite,
+        }),
+      );
+      print(json.decode(response.body));
+      print(json.decode(response.statusCode.toString()));
+      final newProduct = ProductProvider(
+        id: json.decode(response.body)["name"],
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+      );
+      _items.add(newProduct);
+      notifyListeners();
+    } catch (error) {
+      print(error);
+      throw error;
+    }
   }
+  // print(error);
+  // throw error;
 
   void updateProduct(String id, ProductProvider newProduct) {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
