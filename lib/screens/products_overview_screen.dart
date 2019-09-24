@@ -34,12 +34,12 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
     if (!_isInit) {
       setState(() {
         _isLoading = true;
-        print("Log: _isLoding: $_isLoading ");
+        // print("ProductsOverviewScreen Log: _isLoding: $_isLoading ");
       });
       Provider.of<ProductsProvider>(context).fetchAndSetProducts().then((_) {
         setState(() {
           _isLoading = false;
-          print("Log: _isLoding: $_isLoading ");
+          // print("ProductsOverviewScreen Log: _isLoding: $_isLoading ");
         });
       });
     }
