@@ -6,10 +6,12 @@ import './screens/products_overview_screen.dart';
 import './screens/cart_screen.dart';
 import './screens/orders_screen.dart';
 import './screens/user_products_screen.dart';
+import './screens/auth-screen.dart';
 import './screens/edit_product_screen.dart';
 import './providers/products_provider.dart';
 import './providers/cart_provider.dart';
 import './providers/orders.dart';
+import './providers/auth_provider.dart';
 
 void main() => runApp(MyApp());
 
@@ -28,6 +30,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider.value(
           value: Orders(),
+        ),
+        ChangeNotifierProvider.value(
+          value: Auth(),
         )
       ],
       child: MaterialApp(
@@ -37,13 +42,14 @@ class MyApp extends StatelessWidget {
           accentColor: Colors.deepOrange,
           fontFamily: "Lato",
         ),
-        home: ProductsOverviewScreen(),
+        home: AuthScreen(),
         routes: {
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
           CartScreen.routeName: (ctx) => CartScreen(),
           OrdersScreen.routeName: (ctx) => OrdersScreen(),
           UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
           EditProductScreen.routeName: (ctx) => EditProductScreen(),
+          AuthScreen.routeName: (ctx) => AuthScreen(),
         },
       ),
     );
