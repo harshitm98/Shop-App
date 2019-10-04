@@ -42,6 +42,10 @@ class ProductsProvider with ChangeNotifier {
     // ),
   ];
 
+  /// Making sure when token changes and the whole ProductsProvider is rebuilt, we do not lose our items.
+  final String authToken;
+  ProductsProvider(this.authToken, this._items);
+
   ProductProvider findById(String id) {
     return _items.firstWhere((product) => product.id == id);
   }
@@ -75,12 +79,12 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProducts() async {
-    const url = "https://flutter-firebase-226e5.firebaseio.com/products.json";
+    final url = "https://flutter-firebase-226e5.firebaseio.com/products.json?auth={$authToken}";
     try {
       final response = await http.get(url);
       final extarctedData = json.decode(response.body) as Map<String, dynamic>;
       final List<ProductProvider> loadedProducts = [];
-      if(extarctedData == null){
+      if (extarctedData == null) {
         return;
       }
       extarctedData.forEach((prodId, value) {
@@ -102,7 +106,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> addProducts(ProductProvider product) async {
-    const url = "https://flutter-firebase-226e5.firebaseio.com/products.json";
+    final url = "https://flutter-firebase-226e5.firebaseio.com/products.json?auth={$authToken}";
     // Returns Future<void> ie http.then(..) is returned
     try {
       final response = await http.post(
@@ -138,7 +142,7 @@ class ProductsProvider with ChangeNotifier {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
       final url =
-          "https://flutter-firebase-226e5.firebaseio.com/products/$id.json";
+          "https://flutter-firebase-226e5.firebaseio.com/products/$id.json?auth={$authToken}";
       await http.patch(url,
           body: json.encode({
             "title": newProduct.title,

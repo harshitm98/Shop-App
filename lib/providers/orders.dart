@@ -26,6 +26,10 @@ class Orders with ChangeNotifier {
     return [..._orders];
   }
 
+  final String authToken;
+  Orders(this.authToken, this._orders);
+
+
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
     const url = "https://flutter-firebase-226e5.firebaseio.com/orders.json";
     final timeStamp = DateTime.now();
